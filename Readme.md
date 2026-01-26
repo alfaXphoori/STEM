@@ -100,6 +100,7 @@
 
 </details>
 
+## Author
 <p align="center">
 	<strong style="font-size:1.1em">🧑‍🏫 ผู้จัดทำ</strong><br>
 	<strong style="font-size:1.05em">อาจารย์ภูริ จันทิมา</strong><br>
