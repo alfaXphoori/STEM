@@ -6,7 +6,7 @@
 ## 1. 📥 ดาวน์โหลดและติดตั้ง Arduino IDE
 1. เข้าเว็บไซต์ [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)
 2. เลือกดาวน์โหลด Arduino IDE ตามระบบปฏิบัติการของคุณ (Windows, Mac, Linux)
-   <div align="center"><img src="Src/0000_download_arduIDE.png" alt="ดาวน์โหลด Arduino IDE" width="400"/></div>
+   <div align="center"><img src="Src/0000_download_arduIDE.png" alt="ดาวน์โหลด Arduino IDE" width="600"/></div>
 3. ติดตั้งโปรแกรมตามขั้นตอนที่แนะนำ
 
 ## 2. 🔧 เปิด Arduino IDE
@@ -18,20 +18,20 @@
    ```
    https://espressif.github.io/arduino-esp32/package_esp32_index.json
    ```
-   <div align="center"><img src="Src/0001_addEsp32.png" alt="เพิ่ม ESP32 Board URL" width="400"/></div>
+   <div align="center"><img src="Src/0001_addEsp32.png" alt="เพิ่ม ESP32 Board URL" width="600"/></div>
 3. กด **OK**
 
 ## 4. 📦 ติดตั้ง ESP32 Board
 1. ไปที่ **Tools > Board > Boards Manager**
 2. ค้นหา "ESP32"
-   <div align="center"><img src="Src/0002_installBoard_Esp32.png" alt="ติดตั้ง ESP32 Board" width="400"/></div>
+   <div align="center"><img src="Src/0002_installBoard_Esp32.png" alt="ติดตั้ง ESP32 Board" width="600"/></div>
 3. กด **Install** ที่ "esp32 by Espressif Systems"
 4. รอจนติดตั้งเสร็จ
 
 ## 5. 🎯 เลือกบอร์ด ESP32
 1. ไปที่ **Tools > Board**
 2. เลือกบอร์ดที่ต้องการใช้งาน เช่น "ESP32 Dev Module" หรือ "ESP32C3 Dev Module"
-   <div align="center"><img src="Src/0003_choose_Esp32C3.png" alt="เลือกบอร์ด ESP32C3" width="400"/></div>
+   <div align="center"><img src="Src/0003_choose_Esp32C3.png" alt="เลือกบอร์ด ESP32C3" width="600"/></div>
 3. ไปที่ **Tools > USB CDC On Boot** แล้วเลือก **Enable** (เพื่อให้ Serial Monitor ใช้งานได้)
 
 ## 6. 🔌 ติดตั้งไดรเวอร์ (ถ้าจำเป็น)
