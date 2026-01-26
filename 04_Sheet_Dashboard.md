@@ -5,7 +5,7 @@
 
 ### 1. สร้าง Google Apps Script
 เข้า Google Sheets > Extensions > Apps Script
-<div align="center"><img src="0401_updateScript.png" alt="Update Script" width="400"/></div>
+<div align="center"><img src="Src/0401_updateScript.png" alt="Update Script" width="400"/></div>
 
 ### 2. วางโค้ด Apps Script แล้ว Save
 ```javascript
@@ -30,13 +30,13 @@ function doGet(e) {
 ```
 
 ### 3. Deploy เป็น Web App
-<div align="center"><img src="0402_deploy.png" alt="Deploy Script" width="400"/></div>
-<div align="center"><img src="0403_editNew_deploy.png" alt="Edit New Deploy" width="400"/></div>
+<div align="center"><img src="Src/0402_deploy.png" alt="Deploy Script" width="400"/></div>
+<div align="center"><img src="Src/0403_editNew_deploy.png" alt="Edit New Deploy" width="400"/></div>
 
 
 ### 4. สร้างไฟล์ index.html สำหรับ Dashboard
 วางโค้ด HTML ด้านล่างนี้ในไฟล์ index.html
-<div align="center"><img src="0404_create_html.png" alt="Create HTML Dashboard" width="400"/></div>
+<div align="center"><img src="Src/0404_create_html.png" alt="Create HTML Dashboard" width="400"/></div>
 
 #### ตัวอย่างโค้ด index.html
 ```html
@@ -331,9 +331,9 @@ function doGet(e) {
 ```
 
 ### 5. เปิด index.html ด้วย Chrome และใส่ Web App URL
-<div align="center"><img src="0405_add_webScript_dash.png" alt="Add Web Script Dashboard" width="400"/></div>
+  <div align="center"><img src="Src/0405_add_webScript_dash.png" alt="Add Web Script Dashboard" width="400"/></div>
 
 ### 6. ตัวอย่าง Dashboard ที่เสร็จสมบูรณ์
-<div align="center"><img src="0406_full_project.png" alt="Full Project Dashboard" width="400"/></div>
+<div align="center"><img src="Src/0406_full_project.png" alt="Full Project Dashboard" width="400"/></div>
 
 
