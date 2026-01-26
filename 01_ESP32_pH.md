@@ -148,7 +148,8 @@ void loop() {
 ---
 
 ## 🖼️ แสดงผลการทำเสร็จ
-<div align="center">
-  <img src="01_ESP32_pH.png" alt="ESP32-C3 pH Serial Schematic" width="400"/>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/01_ESP32_pH.png" alt="ESP32-C3 pH Serial Schematic" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>ESP32-C3 pH Serial Schematic</em></div>
 </div>
 

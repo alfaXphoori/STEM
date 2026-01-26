@@ -16,19 +16,31 @@
 
 ### 1. เข้า Google Sheets
 ไปที่ https://workspace.google.com/products/sheets
-<div align="center"><img src="Src/0301_gosheet.png" alt="เข้า Google Sheets" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0301_gosheet.png" alt="เข้า Google Sheets" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>เข้า Google Sheets</em></div>
+</div>
 
 ### 2. สร้าง Sheet ใหม่
 คลิก “+” เพื่อสร้าง Google Sheet เปล่า
-<div align="center"><img src="Src/0302_create_sheet.png" alt="สร้าง Sheet ใหม่" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0302_create_sheet.png" alt="สร้าง Sheet ใหม่" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>สร้าง Sheet ใหม่</em></div>
+</div>
 
 ### 3. เปลี่ยนชื่อ Sheet และเข้า App Script
 เปลี่ยนชื่อ Sheet ตามต้องการ แล้วไปที่ Extensions > Apps Script
-<div align="center"><img src="Src/0303_rename_appscript.png" alt="เข้า App Script" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0303_rename_appscript.png" alt="เข้า App Script" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>เข้า App Script</em></div>
+</div>
 
 ### 4. เปลี่ยนชื่อ Project และวางโค้ด
 เปลี่ยนชื่อ Project (เช่น “pH Logger”) ลบโค้ดเดิมออก แล้ววางโค้ดนี้ลงไป:
-<div align="center"><img src="Src/0304_rename_addcode.png" alt="วางโค้ดใน App Script" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0304_rename_addcode.png" alt="วางโค้ดใน App Script" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>วางโค้ดใน App Script</em></div>
+</div>
 
 ```javascript
 function doGet(e) { 
@@ -42,29 +54,50 @@ function doGet(e) {
 ```
 
 ### 5. กดปุ่ม “Deploy” > “New deployment”
-<div align="center"><img src="Src/0305_newDeploy.png" alt="New deployment" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0305_newDeploy.png" alt="New deployment" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>New deployment</em></div>
+</div>
 
 ### 6. ตรง “Select type” เลือก “Web app”
-<div align="center"><img src="Src/0306_chooseWebapp.png" alt="เลือก Web app" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0306_chooseWebapp.png" alt="เลือก Web app" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>เลือก Web app</em></div>
+</div>
 
 ### 7. ตั้งค่าตามนี้
 - Description: pH Logger
 - Execute as: Me (ฉัน)
 - Who has access: Anyone (ทุกคน)  
-<div align="center"><img src="Src/0307_set_Webapp.png" alt="ตั้งค่า Web app" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0307_set_Webapp.png" alt="ตั้งค่า Web app" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>ตั้งค่า Web app</em></div>
+</div>
 
 ### 8. กด Deploy
 ### 9. Authorize access (ให้สิทธิ์การเข้าถึง)
-<div align="center"><img src="Src/0308_Auth_Webapp.png" alt="Authorize access" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0308_Auth_Webapp.png" alt="Authorize access" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>Authorize access</em></div>
+</div>
 
 ### 10. กด Advance และ “Go to unsafe”
-<div align="center"><img src="Src/0309_Adv_unsafe.png" alt="Go to unsafe" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0309_Adv_unsafe.png" alt="Go to unsafe" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>Go to unsafe</em></div>
+</div>
 
 ### 11. Copy Deployment ID มาใส่ในตัวแปร GOOGLE_SCRIPT_ID ในโค้ด Arduino
-<div align="center"><img src="Src/0310_copyID.png" alt="Copy Deployment ID" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0310_copyID.png" alt="Copy Deployment ID" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>Copy Deployment ID</em></div>
+</div>
 
 ### 12. ข้อมูลจะถูกส่งไปเก็บไว้ใน Google Sheet เรียบร้อย
-<div align="center"><img src="Src/0311_updateSheet.png" alt="ข้อมูลถูกส่งเข้า Google Sheet" width="400"/></div>
+<div align="center" style="margin: 2em 0;">
+  <img src="Src/0311_updateSheet.png" alt="ข้อมูลถูกส่งเข้า Google Sheet" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
+  <div style="font-size:1.1em;color:#555;margin-top:0.5em;"><em>ข้อมูลถูกส่งเข้า Google Sheet</em></div>
+</div>
 
 ---
 
