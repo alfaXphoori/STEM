@@ -104,44 +104,46 @@ function doGet(e) {
 ## 💻 ตัวอย่างโค้ด
 ```cpp
 /*
- * Project: ESP32-C3 pH Sensor (Custom Calibration) with WiFi
+ * Project: ESP32-C3 pH Sensor (Custom Calibration) + WiFi + Google Sheets
  * Author: Alfa (https://github.com/alfaxphoori)
- * Description: อ่านค่า pH โดยใช้การเทียบค่าแบบ 3 จุด และเชื่อมต่อ WiFi
+ * Description: อ่านค่า pH, เชื่อมต่อ WiFi และส่งข้อมูลไปยัง Google Sheets
  */
 
-#include <WiFi.h> // เรียกใช้ไลบรารี WiFi
+#include <WiFi.h>
+#include <HTTPClient.h>       // เพิ่มไลบรารีสำหรับ HTTP Request
+#include <WiFiClientSecure.h> // เพิ่มไลบรารีสำหรับ HTTPS (Google ใช้ SSL)
 
 // --- การตั้งค่า WiFi ---
-const char* ssid = "stem";     // ใส่ชื่อ WiFi ของคุณ
-const char* password = "12345678"; // ใส่รหัสผ่าน WiFi ของคุณ
+const char* ssid = "YOUR_WIFI_SSID";         // ใส่ชื่อ WiFi ของคุณ
+const char* password = "YOUR_WIFI_PASSWORD"; // ใส่รหัสผ่าน WiFi ของคุณ
+
+// --- การตั้งค่า Google Sheets ---
+// นำ Deployment ID จาก Google Apps Script มาใส่ตรงนี้ (ดูวิธีทำด้านล่างสุดของไฟล์)
+const char* GOOGLE_SCRIPT_ID = "YOUR_DEPLOYMENT_ID_HERE"; 
+
+// ตั้งเวลาส่งข้อมูล (หน่วยมิลลิวินาที)
+const unsigned long sendInterval = 10000; // ส่งทุกๆ 10 วินาที
+unsigned long lastSendTime = 0;
 
 // --- การตั้งค่า Hardware ---
-// หมายเหตุ: เช็คว่าบอร์ดของคุณ Map ขา A1 เป็น GPIO เบอร์ไหน 
-// หาก Compile ไม่ผ่าน ให้เปลี่ยน A1 เป็นเลขขา GPIO โดยตรง เช่น 0, 1, 2, 3 หรือ 4
 const int phPin = A1; 
 
 // --- ค่าคงที่ของระบบ ---
-const float ESP_ADC_VOLTAGE = 3.3; // แรงดันอ้างอิงของ ESP32 (V)
-const int ADC_RESOLUTION = 4095;   // ความละเอียด 12-bit (0 - 4095)
+const float ESP_ADC_VOLTAGE = 3.3; 
+const int ADC_RESOLUTION = 4095;   
 
-// --- ข้อมูล Calibration (จากการวัดจริงหน้างาน) ---
-const float V_PH7  = 2.186; // แรงดันที่วัดได้ตอนจุ่ม pH 7.0
-const float V_PH1  = 2.537; // แรงดันที่วัดได้ตอนจุ่ม pH 1.0 (Acid)
-const float V_PH14 = 0.980; // แรงดันที่วัดได้ตอนจุ่ม pH 14.0 (Base)
+// --- ข้อมูล Calibration ---
+const float V_PH7  = 2.186; 
+const float V_PH1  = 2.537; 
+const float V_PH14 = 0.980; 
 
 void setup() {
   Serial.begin(115200);
-  
-  // ตั้งค่าความละเอียดการอ่านเป็น 12-bit
   analogReadResolution(12);
-  
-  // ตั้งค่า Attenuation เป็น 11dB เพื่อให้อ่านค่าได้กว้างขึ้น
   analogSetAttenuation(ADC_11db);
   
   Serial.println("---------------------------------------------");
-  Serial.println("ESP32-C3 pH Meter Started");
-  Serial.println("Author: Alfa");
-  Serial.println("Calibration Mode: 3-Point Piecewise Linear");
+  Serial.println("ESP32-C3 pH Meter & Google Sheets Logger");
   
   // --- เริ่มการเชื่อมต่อ WiFi ---
   Serial.print("Connecting to WiFi: ");
@@ -153,81 +155,112 @@ void setup() {
     Serial.print(".");
   }
 
-  Serial.println("");
-  Serial.println("WiFi Connected!");
+  Serial.println("\nWiFi Connected!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
   Serial.println("---------------------------------------------");
 }
 
 /*
- * ฟังก์ชันคำนวณค่า pH จากแรงดัน (Voltage)
- * ใช้สมการเส้นตรง y = mx + c แยกตามช่วง (Piecewise)
+ * ฟังก์ชันคำนวณค่า pH
  */
 float getPH(float voltage) {
   float slope;
-  
-  // กรณีเป็นกรด (Acidic Range): Voltage สูงกว่าค่ากลาง (pH 7)
   if (voltage > V_PH7) { 
-    // คำนวณความชัน (Slope) ช่วง pH 1 ถึง pH 7
     slope = (7.0 - 1.0) / (V_PH7 - V_PH1); 
-    
-    // คำนวณค่า pH
     return 7.0 + slope * (voltage - V_PH7);
-  } 
-  // กรณีเป็นด่าง (Basic Range): Voltage ต่ำกว่าหรือเท่ากับค่ากลาง
-  else { 
-    // คำนวณความชัน (Slope) ช่วง pH 7 ถึง pH 14
+  } else { 
     slope = (14.0 - 7.0) / (V_PH14 - V_PH7); 
-    
-    // คำนวณค่า pH
     return 7.0 + slope * (voltage - V_PH7);
   }
 }
 
+/*
+ * ฟังก์ชันส่งข้อมูลไปยัง Google Sheets ผ่าน HTTPS GET
+ */
+void sendToGoogleSheet(float ph, float voltage) {
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClientSecure client;
+    client.setInsecure(); // ข้ามการตรวจสอบ SSL Certificate (เพื่อให้ง่ายต่อ ESP32)
+    HTTPClient https;
+
+    // สร้าง URL สำหรับยิงข้อมูล
+    // Format: https://script.google.com/macros/s/[ID]/exec?ph=[val]&voltage=[val]
+    String url = "https://script.google.com/macros/s/" + String(GOOGLE_SCRIPT_ID) + "/exec";
+    url += "?ph=" + String(ph, 2);
+    url += "&voltage=" + String(voltage, 3);
+
+    // Serial.println("Sending data to Google Sheets..."); // Debug URL
+    
+    if (https.begin(client, url)) {
+      
+      // *** แก้ไข: เพิ่มการติดตาม Redirect เพื่อแก้ปัญหา Code 302 ***
+      https.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+
+      int httpCode = https.GET(); // ส่ง Request
+      
+      if (httpCode > 0) {
+        // HTTP header has been send and Server response header has been handled
+        // *** แก้ไข: เพิ่ม 302 (Found) ในเงื่อนไขความสำเร็จ ***
+        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY || httpCode == 302) {
+          Serial.println(" [Cloud] Google Sheet Updated Successfully!");
+        } else {
+          Serial.print(" [Cloud] Failed to update. HTTP Code: ");
+          Serial.println(httpCode);
+        }
+      } else {
+        Serial.print(" [Cloud] Error: ");
+        Serial.println(https.errorToString(httpCode));
+      }
+      https.end();
+    } else {
+      Serial.println(" [Cloud] Unable to connect to Google Server");
+    }
+  } else {
+    Serial.println(" [Cloud] WiFi Disconnected");
+  }
+}
+
 void loop() {
-  // 1. อ่านค่า ADC แบบหาค่าเฉลี่ย (Smoothing) ลด Noise
+  // 1. อ่านค่า ADC
   unsigned long totalAdc = 0;
-  int sampleCount = 30; // จำนวนครั้งที่สุ่มอ่าน
+  int sampleCount = 30; 
 
   for(int i = 0; i < sampleCount; i++) {
     totalAdc += analogRead(phPin);
-    delay(5); // หน่วงเวลาสั้นๆ ระหว่างการอ่านแต่ละครั้ง
+    delay(5); 
   }
   
-  // หาค่าเฉลี่ย ADC
   float avgAdc = totalAdc / (float)sampleCount;
-  
-  // 2. แปลง ADC เป็น Voltage
   float voltage = avgAdc * (ESP_ADC_VOLTAGE / ADC_RESOLUTION);
-
-  // 3. แปลง Voltage เป็น pH ผ่านฟังก์ชันที่เขียนไว้
   float currentPH = getPH(voltage);
 
-  // 4. จำกัดขอบเขตค่า (Clamping) ไม่ให้หลุดช่วง 0-14
   if (currentPH < 0) currentPH = 0;
   if (currentPH > 14) currentPH = 14;
 
-  // 5. แสดงผลผ่าน Serial Monitor พร้อมสถานะ WiFi
+  // 2. แสดงผล Local
   String wifiStatus = (WiFi.status() == WL_CONNECTED) ? "ONLINE " : "OFFLINE";
-  
-  Serial.print("Status: [");
-  Serial.print(wifiStatus);
-  Serial.print("] | Raw ADC: ");
-  Serial.print((int)avgAdc);
-  Serial.print(" | Voltage: ");
-  Serial.print(voltage, 3);
-  Serial.print(" V | pH: ");
-  Serial.println(currentPH, 2); 
+  Serial.print("Status: ["); Serial.print(wifiStatus);
+  Serial.print("] | pH: "); Serial.print(currentPH, 2); 
+  Serial.print(" | V: "); Serial.println(voltage, 3);
 
-  // ถ้า Offline ให้พยายามต่อใหม่
+  // 3. ส่งข้อมูลเข้า Google Sheets (ทุกๆ 10 วินาที ตามตัวแปร sendInterval)
+  if (millis() - lastSendTime > sendInterval) {
+    if (String(GOOGLE_SCRIPT_ID) != "YOUR_DEPLOYMENT_ID_HERE") {
+        sendToGoogleSheet(currentPH, voltage);
+    } else {
+        Serial.println(" [Warning] Please insert your Google Script ID first!");
+    }
+    lastSendTime = millis();
+  }
+
+  // Check Reconnection
   if (WiFi.status() != WL_CONNECTED) {
-    // พยายาม Reconnect (ESP32 ปกติจะ Auto-reconnect อยู่แล้ว แต่ใส่เพื่อความชัวร์)
     WiFi.disconnect();
     WiFi.reconnect();
   }
 
-  delay(1000); // อ่านค่าทุกๆ 1 วินาที
+  delay(1000); 
 }
 ```
 
