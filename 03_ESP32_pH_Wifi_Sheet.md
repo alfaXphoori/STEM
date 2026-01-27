@@ -43,13 +43,23 @@
 </div>
 
 ```javascript
-function doGet(e) { 
+function doGet(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  if (e.parameter.action == "read") {
+    var rows = sheet.getLastRow();
+    var startRow = Math.max(1, rows - 49); 
+    var data = sheet.getRange(startRow, 1, rows - startRow + 1, 3).getValues();
+    return ContentService.createTextOutput(JSON.stringify(data))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   var ph = e.parameter.ph;
   var voltage = e.parameter.voltage;
-  var date = new Date();
-  sheet.appendRow([date, ph, voltage]);
-  return ContentService.createTextOutput("Success");
+  if (ph && voltage) {
+    var date = new Date();
+    sheet.appendRow([date, ph, voltage]);
+    return ContentService.createTextOutput("Success");
+  }
+  return ContentService.createTextOutput("No Data");
 }
 ```
 
