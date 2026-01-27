@@ -19,7 +19,7 @@
 1. ไปที่เมนู **File > Preferences**
 2. ที่ช่อง **"Additional Boards Manager URLs"** ให้ใส่ URL นี้:
    ```
-   https://espressif.github.io/arduino-esp32/package_esp32_index.json
+   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
    ```
     <div align="center" style="margin: 2em 0;">
        <img src="Src/0001_addEsp32.png" alt="เพิ่ม ESP32 Board URL" width="800" style="box-shadow:0 4px 24px rgba(0,0,0,0.15);border-radius:16px;"/>
